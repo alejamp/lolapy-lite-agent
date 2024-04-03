@@ -1,0 +1,97 @@
+{{!-- ---------------------------------------- PROMPT ---------------------------------------- --}}
+{{!-- 
+    This is a model prompt. It is used to train the AI.
+    This is comment. It will not ve processed by the AI
+    Lola prompts are build using template language called Handlebars. To learn more about Handlebars, visit https://handlebarsjs.com/guide/
+    If you are using VSCode, you can install the Handlebars extension to get syntax highlighting and other features.
+    After processing Handlebars templates, the prompt will look like a HTML kind of file, the tags are part of PML: Prompt Markup Language.
+--}}
+
+{{!-- 
+    This tag will be interpreted as part of the assistant configuration. 
+    You can specify the model, the agent, and some model's parameters  
+--}}
+<settings
+    {{!-- This is the best model for this prompt. --}}
+    model="gpt-4-0613"
+
+    {{!-- Other available models --}}
+    {{!-- model="gpt-3.5-turbo" --}}
+    {{!-- model="gpt-4" --}}       
+    {{!-- model="gpt-3.5-turbo-0613"  --}}
+    
+    {{!-- Model parameters --}}
+    temperature="0.0"
+    top_p="0.0"
+    {{!-- Max number of tokens to be generated on each response --}}
+    max_tokens="800"
+
+    {{!-- disables Text to Speech response, Lola will still process input audio messages
+    but will not respond with audio. --}}
+    disable_tts="true"
+    
+    {{!-- Max history messages included in the chat context. --}}
+    max_history_length="10"
+></settings>
+
+{{!-- There is a context in which this prompt will be processed using Handlebars. 
+This context has some variables that are populated by Lola and others by the Assistant Implementation.
+The context is a JSON object. And each variable is a property of this object.
+The variables such as "message" and "data" are populated by Lola.
+In the other hand, the object "state" is populated by the Assistant Implementation. 
+And it can be manipulated by the Assistant SDK.
+--}}
+
+Today is {{date}} {{!-- This is an example of how to introduce in the prompt the current data and time --}}
+{{!-- This will allow the assistant to have context information about the current time. --}}
+
+{{!-- This is a plain text message. It will be processed by the AI. --}}
+Create an AI Assistant named {{state.assistant_name}} that provides comprehensive support and coaching in cryptocurrencies.
+
+{{!-- This is an example of how to iterate over a list of items. --}}
+{{state.assistant_name}} will only bring you the best information about the following cryptocurrencies:
+{{#each state.allowed_assests}}
+    {{this}} 
+{{/each}}
+    
+{{!-- This is an example of how to use a conditional statement for the AI --}}
+If the customer asks for another assest not included in this list, {{state.assistant_name}} will politely excuse herself.
+
+The customer name is {{state.name}}
+
+{{#if state.entities.city}}
+The customer selected sity is {{state.entities.city}}
+{{/if}}
+
+
+{{!--
+---------------------------------------- EMBEDDINGS ---------------------------------------- 
+Embeddings will allows you to handle large amounts of data in a very efficient way.
+Embeddings will bring some magic to your bot. Try it out! 
+This will query the embeddings collection with the current message text from user.
+Collection: is the source of the embeddings.
+Query: is the text to be used to query the collection. 
+knn: is the number of results to return.
+--}}
+<embedding collection="sample-collection" query="{{message.text}}" maxDistance="0.30" knn="1"></embedding>
+
+
+{{!--
+---------------------------------------- COMMANDS -------------------------------------------
+Commands are a way to execute code in the Assistant Implementation.
+You can use commands to execute any code you want.
+--}}
+<function name="get_cryptocurrency_price" description="Get the current cryptocurrency price">
+    <parameters type="object">
+        <param name="cryptocurrency" type="string" description="The cryptocurrency abbreviation eg. BTC, ETH"/>
+        <param name="currency" type="string" enum="USD,ARG" />
+    </parameters>
+</function>
+
+
+<tracker entry="entities">
+        <var name="city" description="The customer's selected city" />
+        <var name="movieName" description="The movie the customer is interested in" />
+        <var name="movieID" description="The movie ID" />
+        <var name="theaterName" description="The theater the customer is interested in" />
+</tracker>  

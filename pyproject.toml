@@ -1,0 +1,40 @@
+[project]
+name = "lolapy-lite-agent"
+version = "0.1.0"
+authors = [
+  { name="Alejandro Pirola", email="alejandro@leapfinancial.com" },
+]
+description = "This project is a Lola SDK extension to handle a lite Agent version"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  'lolapy @ git+https://github.com/alejamp/lola-py-sdk',
+  'redis-lru>=0.1.2',
+  'schedule>=1.2.0',
+  'colorama>=0.4.6',
+  'python-socketio>=5.8.0',
+  'websocket-client>=1.6.1',
+  'redis>=4.6.0',
+  'requests>=2.27.1',
+  'Flask>=2.2.2',
+  'pydantic>=2.5.0',
+  "pybars3",
+  "openai>=1.12.0",
+  "loguru>=0.7.2"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages]
+find = {}  # Scan the project directory with the default parameters
+
+[project.urls]
+"Homepage" = "https://github.com/alejamp/lola-py-sdk"
+"Bug Tracker" = "https://github.com/alejamp/lola-py-sdk/issues"
