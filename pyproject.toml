@@ -1,6 +1,6 @@
 [project]
 name = "lolapy-lite-agent"
-version = "0.1.1"
+version = "0.1.2"
 authors = [
   { name="Alejandro Pirola", email="alejandro@leapfinancial.com" },
 ]
@@ -26,7 +26,8 @@ dependencies = [
   "pybars3",
   "openai>=1.12.0",
   "loguru>=0.7.2",
-  'beautifulsoup4>=4.12.3'
+  'beautifulsoup4>=4.12.3',
+  'lxml',
 ]
 
 [build-system]
