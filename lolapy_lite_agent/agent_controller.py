@@ -18,6 +18,7 @@ class AgentController:
                  openai_api_key: str,
                  on_text_received: callable = None,
                  on_function_call: Callable[[ChatLead, str, str], str] = None,
+                 on_update_state: callable = None,
                  init_state: dict = None):
         # prompt
         self.prompt = prompt
@@ -26,6 +27,8 @@ class AgentController:
         self.on_text_received = on_text_received
         self.on_function_call = on_function_call
         self.init_state = init_state
+        self.on_update_state = on_update_state
+        self.processing = False
 
         # ChatLead
         self.lead = ChatLead(user_id, "rtc", "tenant1", "assistant1")
@@ -48,6 +51,7 @@ class AgentController:
 
         job = self.create_user_message_agent_job(message)
 
+        self._update_processing_state(True)
         # process job
         res = asyncio.run(self.agent.process_results_coro(self.agent.process(job)))
         content = res.get("content")
@@ -69,6 +73,7 @@ class AgentController:
             content = res.get("content")
             function_call = res.get("function_call")
         
+        self._update_processing_state(False)
         return content
 
 
@@ -108,6 +113,11 @@ class AgentController:
             log.warning(f"Unknown command: {cmd.command}")
             return None
 
+    def _update_processing_state(self, processing = False):
+        self.processing = processing
+        if self.on_update_state:
+            self.on_update_state(processing)
+            
 
 
 
@@ -142,6 +152,11 @@ if __name__ == "__main__":
         print(">>>>>> ",function_name)
         return f"The Bitcoin price is $1000"
 
-    ctr = AgentController(prompt, "123", OPENAI_API_KEY, on_function_call=on_function_call, on_text_received=lambda x: print(x, end=""))
+    ctr = AgentController(prompt, "123", OPENAI_API_KEY, 
+                          on_function_call=on_function_call, 
+                          on_text_received=lambda x: print(x, end=""),
+                          on_update_state=lambda x: log.info(f"Processing: {x}"))
+    
+    ctr.process_client_command(ClientCommand("/reset", ["all"]))
 
     ctr.process_message("Tell me the price of BTC in USD.")

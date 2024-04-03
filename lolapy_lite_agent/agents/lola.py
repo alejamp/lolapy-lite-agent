@@ -109,7 +109,7 @@ class LolaAgent:
                     n=1,
                     stream=True,
                     messages=chat_messages,
-                    max_tokens=max_tokens,
+                    max_tokens=int(max_tokens or DEFAULT_MAX_TOKENS),
                     functions=ctx.get("functions", []),
                 ),
                 10,
