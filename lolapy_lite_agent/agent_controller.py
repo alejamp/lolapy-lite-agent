@@ -121,7 +121,15 @@ if __name__ == "__main__":
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
     # prompt
-    prompt = """Create an assistant called {{state.name}}
+    prompt = """
+    <settings
+        model="gpt-4-0613"
+        temperature="0.0"
+        top_p="0.0"
+        max_tokens="800"
+        max_history_length="10"
+    ></settings>    
+    Create an assistant called {{state.name}}
         <function name="get_cryptocurrency_price" description="Get the current cryptocurrency price">
             <parameters type="object">
                 <param name="cryptocurrency" type="string" description="The cryptocurrency abbreviation eg. BTC, ETH"/>

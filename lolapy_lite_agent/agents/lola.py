@@ -14,6 +14,8 @@ from lolapy_lite_agent.state.state_redis_provider import RedisChatStateProvider
 import logging
 
 DEFAULT_MODEL = "gpt-4-1106-preview"
+DEFAULT_MAX_TOKENS = 1500
+DEFAULT_MAX_HISTORY = 10
 
 class LolaAgent:
 
@@ -79,21 +81,26 @@ class LolaAgent:
         self._historyStore.append_to_history(lead, msg)
 
     async def request_stream(self, job: AgentJob, ctx: PromptCompiled) -> AsyncIterable[dict]:
+
+        # get model from settings
+        model = ctx.get("settings", {}).get("model", self._default_model)
+        max_tokens = ctx.get("settings", {}).get("max_tokens", DEFAULT_MAX_TOKENS)
+        max_history = ctx.get("settings", {}).get("max_history_length", DEFAULT_MAX_HISTORY)
+
+
         chat_messages = []
         chat_messages.append(create_prompt_message(
             content=ctx.get("prompt", "")
         ))
 
-
-        history_messages = self._historyStore.get_history(job.lead)
+        # get history messages up to max_history
+        history_messages = self._historyStore.get_history_slice(job.lead, 0, max_history)
 
         # append history messages to the chat messages
         for message in history_messages:
             chat_messages.append(message)
 
 
-        # get model from settings
-        model = ctx.get("settings", {}).get("model", self._default_model)
 
         try:
             chat_stream = await asyncio.wait_for(
@@ -102,6 +109,7 @@ class LolaAgent:
                     n=1,
                     stream=True,
                     messages=chat_messages,
+                    max_tokens=max_tokens,
                     functions=ctx.get("functions", []),
                 ),
                 10,
