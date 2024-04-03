@@ -93,14 +93,17 @@ class AgentController:
             if cmd.args == ["all"]:
                 self.agent.clear_history(self.lead)
                 self.agent.clear_state(self.lead)
+                log.warning("Resetting all")
             else:
                 self.agent.clear_history(self.lead)
+                log.warning("Resetting history")
 
         elif cmd.command == "/state":
             if cmd.args == ["set"]:
                 key = cmd.args[1]
                 value = cmd.args[2]
                 self.agent._stateStore.set_key_value(self.lead, key, value)
+                log.warning(f"Setting state: {key}={value}")
         else:
             log.warning(f"Unknown command: {cmd.command}")
             return None
