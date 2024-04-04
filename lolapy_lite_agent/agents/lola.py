@@ -42,7 +42,7 @@ class LolaAgent:
 
         # compile prompt
         prompt_compiler = PromptCompiler(job, job.prompt, self._historyStore, self._stateStore) 
-        ctx = prompt_compiler.process(job.init_state)
+        ctx = prompt_compiler.process(init_state=job.init_state, new_state=job.new_state)
 
         # request stream
         async for text in self.request_stream(job, ctx):

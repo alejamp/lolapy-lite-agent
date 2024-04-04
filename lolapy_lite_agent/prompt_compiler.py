@@ -28,6 +28,7 @@ class PromptCompiler:
         """Context for handlebars temaplating"""
         history = self.historyStore.get_history(self.job.lead)
         state = self.stateStore.get_store(self.job.lead) or {}
+        new_state = new_state or {}
 
         # merge the initial state with the state from the store
         # init_state will be overwritten by the state dict from the store
