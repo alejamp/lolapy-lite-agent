@@ -24,7 +24,7 @@ class PromptCompiler:
         self.job = job
 
     
-    def context(self, init_state={}):
+    def context(self, init_state={}, new_state={}):
         """Context for handlebars temaplating"""
         history = self.historyStore.get_history(self.job.lead)
         state = self.stateStore.get_store(self.job.lead) or {}
@@ -32,6 +32,9 @@ class PromptCompiler:
         # merge the initial state with the state from the store
         # init_state will be overwritten by the state dict from the store
         state = {**(init_state or {}), **state}
+        # merge the new state with the state from the store
+        # new_state will overwrite the state dict from the store
+        state = {**state, **new_state}
 
 
 
@@ -42,10 +45,10 @@ class PromptCompiler:
         }
 
 
-    def process(self, init_state=None) -> PromptCompiled:
+    def process(self, init_state=None, new_state=None) -> PromptCompiled:
         hbc = get_handlebars_compiler()        
         template = hbc.compile(self.prompt)
-        ctx = self.context(init_state)
+        ctx = self.context(init_state, new_state)
         pml = template(ctx, helpers=get_helpers())
 
         # create a PML Builder
@@ -84,6 +87,8 @@ if __name__ == "__main__":
 
     res = prompt_compiler.process({
         'name': 'John Doe'
+    }, {
+        'name': 'Jane Doe'
     })
 
     print(res)
