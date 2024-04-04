@@ -12,6 +12,7 @@ from lolapy_lite_agent.nlp_job import AgentJob
 from lolapy_lite_agent.prompt_compiler import PromptCompiled, PromptCompiler
 from lolapy_lite_agent.state.state_redis_provider import RedisChatStateProvider
 import logging
+from loguru import logger as log
 
 DEFAULT_MODEL = "gpt-4-1106-preview"
 DEFAULT_MAX_TOKENS = 1500
@@ -94,13 +95,16 @@ class LolaAgent:
         ))
 
         # get history messages up to max_history
-        history_messages = self._historyStore.get_history_slice(job.lead, 0, max_history)
+        history_messages = self._historyStore.get_last_messages(job.lead, max_history)
 
         # append history messages to the chat messages
         for message in history_messages:
             chat_messages.append(message)
 
-
+        # show history messages in log idx -> content. Message is a dictionary
+        # for idx, message in enumerate(history_messages):
+        #     log.info(f"{idx} -> {message}")
+            
 
         try:
             chat_stream = await asyncio.wait_for(
@@ -179,10 +183,9 @@ class LolaAgent:
 
 
 
-        # self._messages.append(
-        #     ChatGPTMessage(role=ChatGPTMessageRole.assistant, content=complete_response)
-        # )
-        self.add_assistant_message(job.lead, complete_response)                
+        if complete_response:
+            self.add_assistant_message(job.lead, complete_response)
+
         self._producing_response = False        
 
 
