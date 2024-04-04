@@ -86,7 +86,7 @@ class LolaAgent:
         # get model from settings
         model = ctx.get("settings", {}).get("model", self._default_model)
         max_tokens = ctx.get("settings", {}).get("max_tokens", DEFAULT_MAX_TOKENS)
-        max_history = ctx.get("settings", {}).get("max_history_length", DEFAULT_MAX_HISTORY)
+        max_history =  int(ctx.get("settings", {}).get("max_history_length", DEFAULT_MAX_HISTORY))
 
 
         chat_messages = []
@@ -95,6 +95,7 @@ class LolaAgent:
         ))
 
         # get history messages up to max_history
+        
         history_messages = self._historyStore.get_last_messages(job.lead, max_history)
 
         # append history messages to the chat messages
