@@ -57,7 +57,15 @@ if __name__ == "__main__":
     provider = RedisHistoryProvider()
     lead = ChatLead("123", "test", "tenant", "assistant")
 
-    provider.append_to_history(lead, "Hello")
-    provider.append_to_history(lead, "World")
+    # provider.append_to_history(lead, "Hello")
+    # provider.append_to_history(lead, "World")
 
-    print(provider.get_history(lead))
+    # print(provider.get_history(lead))
+
+    provider.clear_history(lead)
+
+    for i in range(15):
+        provider.append_to_history(lead, f"Message {i}")
+
+    # get the last 5 messages
+    print(provider.get_last_messages(lead, 5))
