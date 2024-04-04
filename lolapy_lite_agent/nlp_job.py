@@ -1,7 +1,7 @@
 from typing import Any
 from lolapy_lite_agent.chat_lead import ChatLead
 
-DEFAULT_PROMPT = "Hello {{state.name}} this is a default prompt"
+DEFAULT_PROMPT = "Create an assistant funny and sarcastic, dark humor chatbot."
 
 
 class AgentJob:
@@ -10,5 +10,5 @@ class AgentJob:
         self.lead = lead
         self.message = message
         self.prompt = prompt or DEFAULT_PROMPT
-        self.init_state = init_state,
+        self.init_state = init_state
         self.new_state = new_state
