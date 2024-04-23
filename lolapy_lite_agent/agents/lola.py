@@ -46,7 +46,11 @@ class LolaAgent:
 
         # request stream
         async for text in self.request_stream(job, ctx):
-            yield text        
+            yield text     
+
+    def is_first_message(self, lead: ChatLead):
+        res = self._historyStore.get_history(lead)
+        return len(res) == 0
 
     def clear_history(self, lead: ChatLead):
         self._historyStore.clear_history(lead)
@@ -246,6 +250,7 @@ if __name__ == "__main__":
                    message="Tell me the price of BTC in USD.", 
                    init_state={"name": "Lola"}
                    )
+    
 
     def on_text_received(text):
         print(text, end="")
@@ -263,7 +268,14 @@ if __name__ == "__main__":
     # clear history
     agent.clear_history(lead)
 
+    is_first_msg = agent.is_first_message(lead)
+    print("Is first message (True): ", is_first_msg)
+
     agent.add_user_message(lead, "Hello! my name is John Doe")
+
+    is_first_msg = agent.is_first_message(lead)
+    print("Is first message (False): ", is_first_msg)
+
 
     # process job
     res = asyncio.run(agent.process_results_coro(agent.process(job)))
