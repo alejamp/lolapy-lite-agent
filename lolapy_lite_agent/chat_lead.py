@@ -16,6 +16,16 @@ class ChatLead(ABC):
 
     def serialize(input):
         return json.dumps(input)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "channel_source": self.channel_source,
+            "tenant_id": self.tenant_id,
+            "assistant_id": self.assistant_id,
+            "metadata": self.metadata,
+            "signature": self.signature
+        }
         
 
         
