@@ -17,6 +17,7 @@ from loguru import logger as log
 DEFAULT_MODEL = "gpt-4-1106-preview"
 DEFAULT_MAX_TOKENS = 1500
 DEFAULT_MAX_HISTORY = 10
+TIMEOUT_ERROR_MESSAGE = "Sorry, I'm taking too long to respond. Please try again later."
 
 class LolaAgent:
 
@@ -85,6 +86,40 @@ class LolaAgent:
         msg = create_function_response_message(function_call.get("name"), response)
         self._historyStore.append_to_history(lead, msg)
 
+
+    async def blend_message_into_context(self, lead: ChatLead, message: str, history_length=3, max_tokens=None, model=None):
+
+        chat_messages = self._historyStore.get_last_messages(lead, history_length)
+
+        dialog = ""
+        for msg in chat_messages:
+            role = msg.get("role")
+            content = msg.get("content")
+            dialog += f"{role}: {content}\n"
+
+        prompt1 = f"Given this conversation:\n{dialog}"
+        prompt2 = f"Elaborate this response in context to the user (translate if needed to users lang, dont use markdown, dont include assistan: or user: labels): {message}"
+        chat_messages.append(create_prompt_message(prompt1))
+        chat_messages.append(create_prompt_message(prompt2))
+
+        try:
+            chat = await asyncio.wait_for(
+                self._client.chat.completions.create(
+                    model=model or self._default_model,
+                    n=1,
+                    stream=False,
+                    messages=chat_messages,
+                    max_tokens=int(max_tokens or DEFAULT_MAX_TOKENS)
+                ),
+                10,
+            )
+
+            return chat.choices[0].message.content
+        except TimeoutError:
+            return TIMEOUT_ERROR_MESSAGE
+
+    
+
     async def request_stream(self, job: AgentJob, ctx: PromptCompiled) -> AsyncIterable[dict]:
 
         # get model from settings
@@ -124,7 +159,7 @@ class LolaAgent:
                 10,
             )
         except TimeoutError:
-            yield "Sorry, I'm taking too long to respond. Please try again later."
+            yield TIMEOUT_ERROR_MESSAGE
             return
 
         self._producing_response = True
