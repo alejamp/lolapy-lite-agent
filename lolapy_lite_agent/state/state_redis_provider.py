@@ -45,10 +45,9 @@ class RedisChatStateProvider(BaseChatStateProvider):
         store = self.client.hgetall(hash_key)
         if not store:
             return None
-        res = {}
-        for key in store:
-            res[key] = json.loads(store[key])
-        return res
+        return {k.decode('utf-8'): json.loads(store[k]) for k in store}
+    
+        
 
     def set_store(self, lead, store, ttl=None):
         hash_key = self.get_key(lead)
@@ -70,3 +69,12 @@ if __name__ == "__main__":
 
     provider.clear_store(lead)
     
+    state = provider.get_store(lead) or {}
+    print(state)
+    state['test'] = "test_value"
+    provider.set_store(lead, state)
+    print("--------------------------")
+    state = provider.get_store(lead)
+    print(state)
+    print(state.get('test'))
+
