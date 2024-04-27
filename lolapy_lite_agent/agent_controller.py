@@ -19,6 +19,7 @@ class AgentController:
                  on_text_received: callable = None,
                  on_function_call: Callable[[ChatLead, str, str], str] = None,
                  on_update_state: callable = None,
+                 redis_url: str = None,
                  init_state: dict = None):
         # prompt
         self.prompt = prompt
@@ -37,7 +38,8 @@ class AgentController:
         # LolaAgent
         self.agent = LolaAgent(api_key=self.openai_api_key, 
                         on_text_received=self.on_text_received,
-                        on_function_call=self.on_function_call
+                        on_function_call=self.on_function_call,
+                        redis_url=redis_url,
                     )
 
 

@@ -23,11 +23,12 @@ class LolaAgent:
 
     def __init__(self, 
                  api_key, 
-                 default_model=None, 
+                 default_model=None,
+                 redis_url=None,
                  on_text_received: callable = None,
                  on_function_call: callable = None):
-        self._stateStore = RedisChatStateProvider()
-        self._historyStore = RedisHistoryProvider()
+        self._stateStore = RedisChatStateProvider(redis_url=redis_url)
+        self._historyStore = RedisHistoryProvider(redis_url=redis_url)
         self._api_key = api_key
         self._default_model = default_model or DEFAULT_MODEL
         self._client = openai.AsyncOpenAI(api_key=self._api_key)
