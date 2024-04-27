@@ -9,7 +9,7 @@ class RedisHistoryProvider(BaseHistoryProvider):
     def __init__(self, redis_url=None):
         self.redis_url = redis_url if redis_url else "localhost"
         print(f"RedisHistoryProvider -> Connecting to redis at {self.redis_url}")
-        self.client = redis.Redis(host=self.redis_url)
+        self.client = redis.Redis.from_url(self.redis_url)
 
     def get_key(self, lead: ChatLead):
         return f"h:{lead.get_token()}"
@@ -54,7 +54,7 @@ class RedisHistoryProvider(BaseHistoryProvider):
     
 
 if __name__ == "__main__":
-    provider = RedisHistoryProvider()
+    provider = RedisHistoryProvider(redis_url="redis://localhost:6379/0")
     lead = ChatLead("123", "test", "tenant", "assistant")
 
     # provider.append_to_history(lead, "Hello")

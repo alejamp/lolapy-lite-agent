@@ -10,7 +10,7 @@ class RedisChatStateProvider(BaseChatStateProvider):
         super().__init__()
         self.redis_url = redis_url if redis_url else "localhost"
         print("RedisChatStateProvider -> Connecting to redis")
-        self.client = redis.Redis(host=self.redis_url)
+        self.client = redis.Redis.from_url(self.redis_url)
         
     def get_key(self, lead):
         return "s:" + lead.get_token()
@@ -58,7 +58,7 @@ class RedisChatStateProvider(BaseChatStateProvider):
 
 
 if __name__ == "__main__":
-    provider = RedisChatStateProvider()
+    provider = RedisChatStateProvider(redis_url="redis://localhost:6379/0")
     lead = ChatLead("123", "test", "tenant", "assistant")
 
     provider.set_key_value(lead, "key1", "value1")
