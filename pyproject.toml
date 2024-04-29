@@ -1,6 +1,6 @@
 [project]
 name = "lolapy-lite-agent"
-version = "0.1.15"
+version = "0.1.16"
 authors = [
   { name="Alejandro Pirola", email="alejandro@leapfinancial.com" },
 ]
@@ -13,7 +13,6 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  'lolapy @ git+https://github.com/alejamp/lola-py-sdk',
   'redis-lru>=0.1.2',
   'schedule>=1.2.0',
   'colorama>=0.4.6',
