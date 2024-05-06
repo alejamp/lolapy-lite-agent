@@ -28,7 +28,7 @@ from auth_middleware import AuthMiddleware
 from lolapy import LolaSDK
 from lolapy import LolaContext
 from lolapy import ResponseText, ResponseImage
-from lolapy_lite_agent import NotificationsMiddleware
+from lolapy import NotificationsMiddleware
 import requests
 import json
 from dotenv import dotenv_values

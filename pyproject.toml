@@ -1,5 +1,5 @@
 [project]
-name = "lolapy-lite-agent"
+name = "lolapy"
 version = "0.1.16"
 authors = [
   { name="Alejandro Pirola", email="alejandro@leapfinancial.com" },
@@ -13,18 +13,23 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  'redis-lru>=0.1.2',
-  'schedule>=1.2.0',
-  'colorama>=0.4.6',
-  'redis>=4.6.0',
-  'requests>=2.27.1',
-  'pydantic>=2.5.0',
+  "redis-lru>=0.1.2",
+  "schedule>=1.2.0",
+  "colorama>=0.4.6",
+  "redis>=4.6.0",
+  "requests>=2.27.1",
+  "pydantic>=2.5.0",
   "pybars3",
   "openai>=1.12.0",
   "loguru>=0.7.2",
-  'beautifulsoup4>=4.12.3',
-  'lxml',
-  'python-dotenv'
+  "beautifulsoup4>=4.12.3",
+  "lxml",
+  "python-dotenv",
+  "cachetools",
+  "pytest",
+  "pytest-asyncio",
+  "pytest-timeout",
+  "fakeredis"
 ]
 
 [build-system]

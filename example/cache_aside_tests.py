@@ -3,7 +3,7 @@ import os
 import time
 from dotenv import dotenv_values     
 
-from lolapy_lite_agent.caching import MemRedisCacheAside
+from lolapy.assistant.stores import MemRedisCacheAside
 
 
 

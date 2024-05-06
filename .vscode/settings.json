@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./lolapy_lite_agent/caching"
+    ]
+}

@@ -3,7 +3,7 @@ import os
 import time
 
 from event_generator import gen_event
-from lolapy_lite_agent.caching.cache_aside_redis import MemRedisCacheAside
+from lolapy.assistant.stores.cache_aside_redis import MemRedisCacheAside
 
 
 # -------------------------------------------------------------
@@ -16,7 +16,7 @@ sys.path.append(parent_dir)
 sys.path.append(parent_dir + '/lolapy-notifications')
 
 from lolapy import LolaSDK
-from lolapy_lite_agent import NotificationsManager
+from lolapy import NotificationsManager
 from dotenv import dotenv_values
 # -------------------------------------------------------------
 
