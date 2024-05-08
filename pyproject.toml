@@ -29,7 +29,9 @@ dependencies = [
   "pytest",
   "pytest-asyncio",
   "pytest-timeout",
-  "fakeredis"
+  "fakeredis",
+  "langchain==0.1.17",
+  "langchain-openai==0.1.6"
 ]
 
 [build-system]

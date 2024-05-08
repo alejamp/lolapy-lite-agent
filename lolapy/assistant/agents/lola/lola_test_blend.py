@@ -2,7 +2,7 @@
 import os
 import time
 from dotenv import load_dotenv
-from lola import LolaAgent
+from lolapy.assistant.agents.lola.lola_agent import LolaAgent
 from loguru import logger as log
 from lolapy.assistant.chat_lead import ChatLead
 

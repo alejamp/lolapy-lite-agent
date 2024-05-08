@@ -5,6 +5,7 @@ import os
 import time
 from typing import AsyncIterable
 import openai
+from redis import Redis
 from lolapy.assistant.agents.lola.utils import create_assistant_message, create_function_call_message, create_function_response_message, create_prompt_message, create_user_message
 from lolapy.assistant.chat_lead import ChatLead
 from lolapy.assistant.history.history_redis_provider import RedisHistoryProvider
@@ -24,11 +25,11 @@ class LolaAgent:
     def __init__(self, 
                  api_key, 
                  default_model=None,
-                 redis_url=None,
+                 redis: str | Redis =None,
                  on_text_received: callable = None,
                  on_function_call: callable = None):
-        self._stateStore = RedisChatStateProvider(redis_url=redis_url)
-        self._historyStore = RedisHistoryProvider(redis_url=redis_url)
+        self._stateStore = RedisChatStateProvider(redis=redis)
+        self._historyStore = RedisHistoryProvider(redis=redis)
         self._api_key = api_key
         self._default_model = default_model or DEFAULT_MODEL
         self._client = openai.AsyncOpenAI(api_key=self._api_key)
@@ -300,7 +301,8 @@ if __name__ == "__main__":
     # LolaAgent
     agent = LolaAgent(api_key=OPENAI_API_KEY, 
                     on_text_received=on_text_received,
-                    on_function_call=on_function_call
+                    on_function_call=on_function_call,
+                    redis="redis://localhost:6379"
                 )
 
     # clear history
